@@ -1,0 +1,188 @@
+components:
+  schemas:
+    Roles:
+      type: string
+      enum:
+      - admin
+      - waiter
+      - cook
+
+    OrderState:
+      type: string
+      enum:
+        - accepted
+        - progress
+        - ready
+
+    DishType:
+      type: string
+      enum:
+        - drinks
+        - soups
+        - salats
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        first_name:
+          type: string
+          example: Alex
+        last_name:
+          type: string
+          example: Alexeev
+        username:
+          type: string
+          example: alex_alexeev
+        password:
+          type: string
+        role:
+          type:
+            - $ref: '#/components/schemas/Roles'
+          example: waiter
+
+    Waiter:
+      allof:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            busy_state:
+              type: bool
+              example: true
+
+    Dish:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          example: Bean soup
+        description:
+          type: string
+          example: Beautiful bean soup
+        presence_state:
+          type: string
+        callories:
+          type: integer
+          format: int64
+          example: 342
+        price:
+          type: number
+          example: 340.50
+        weight:
+          type: integer
+          format: int64
+          example: 450
+        ingredients:
+          type: array
+          items:
+            type: string
+            example: carrot
+        photo_link:
+          type: string
+          example: 'static/beanSoup'
+        dish_type:
+          $ref: '#/components/schemas/DishType'
+
+    OderItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        dish:
+          type:
+            - $ref: '#/components/schemas/Dish'
+        order_state:
+          type:
+            - $ref: '#/components/schemas/OrderState'
+        order_time:
+          type: string
+        finish_time:
+          type: string
+        prep_pos:
+          type: integer
+          format: int64
+          minimum: 1
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        order_items:
+          type: array
+          items:
+            type:
+              - $ref: '#components/schemas/OrderItem'
+        recognition_event:
+          type:
+            - '#components/schemas/RecognitionEvent'
+          nullable: true
+        cash_sum:
+          type: number
+        payment_state:
+          type: boolean
+
+    OrderGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        start_date:
+          type: string
+        finish_date:
+          type: string
+        cash_sum:
+          type: number
+        table:
+          type: integer
+          format: int64
+          minimum: 1
+        waiter:
+          type:
+            - $ref: '#components/schemas/Waiter'
+        payment_state:
+          type: boolean
+
+    Guest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        loyalty_card:
+          type: string
+        comments:
+          type: id
+        photo:
+          type: string
+          format: byte
+
+    RecognitionEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        date:
+          type: string
+        photo:
+          type: string
+          format: byte
+        possible_guests:
+          type: array
+          items:
+            type:
+              - $ref: '#components/schemas/Guest'
+        guest:
+          type:
+            - $ref: '#components/schemas/Guest'
