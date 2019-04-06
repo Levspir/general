@@ -7,7 +7,7 @@ components:
       - waiter
       - cook
 
-    OrderState:
+    OrderStatus:
       type: string
       enum:
         - accepted
